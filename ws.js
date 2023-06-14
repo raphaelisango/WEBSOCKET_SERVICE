@@ -58,6 +58,7 @@ export class WebSocketClient {
   constructor(source, url) {
     this.source = source;
     this.url = url;
+    this.ws;
   }
 
   setModel(model) {
@@ -70,6 +71,7 @@ export class WebSocketClient {
     this.ws.on("error", console.error);
     this.ws.on("open", () => {
       this.ws.send(JSON.stringify(this.model));
+      console.log("send: %s", JSON.stringify(this.model));
     });
     this.ws.on("message", (data) => {
       console.log("received: %s", data);
@@ -77,11 +79,13 @@ export class WebSocketClient {
     });
   }
 
-  send(data) {
+  send(WebSocket, data) {
+    this.ws = new WebSocket(this.url);
     this.ws.send(data);
   }
 
-  close() {
+  close(WebSocket) {
+    this.ws = new WebSocket(this.url);
     this.ws.close();
   }
 }
